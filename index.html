@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shape Guessing Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    #card {
+      margin: 20px;
+      padding: 20px;
+      border: 2px solid #000;
+      display: inline-block;
+    }
+
+    #options {
+      margin-top: 20px;
+    }
+
+    button {
+      margin: 5px;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    #feedback {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div id="card">Hidden Shape</div>
+
+<div id="options">
+  <button onclick="checkMatch('Square')">Square</button>
+  <button onclick="checkMatch('Circle')">Circle</button>
+  <button onclick="checkMatch('Triangle')">Triangle</button>
+</div>
+
+<div id="feedback"></div>
+
+<script>
+  // Define properties for different shapes
+  const shapes = {
+    Square: { sides: 4, angles: 90, color: 'blue' },
+    Circle: { sides: 0, angles: 0, color: 'red' },
+    Triangle: { sides: 3, angles: 60, color: 'green' }
+  };
+
+  // Get a random shape to hide
+  const hiddenShape = getRandomShape();
+
+  // Display the hidden shape
+  document.getElementById('card').innerText = `Hidden Shape: ${hiddenShape}`;
+
+  // Initialize feedback element
+  const feedbackElement = document.getElementById('feedback');
+
+  // Counter for attempts
+  let attempts = 0;
+
+  // Function to check if the created shape matches the hidden shape
+  function checkMatch(selectedShape) {
+    attempts++;
+
+    const matchCount = calculateMatchCount(selectedShape);
+    displayFeedback(matchCount);
+
+    // Check if the player successfully guessed the shape
+    if (matchCount === Object.keys(shapes[hiddenShape]).length) {
+      alert(`Congratulations! You guessed the shape in ${attempts} attempts.`);
+      resetGame();
+    }
+  }
+
+  // Function to calculate the number of matching properties
+  function calculateMatchCount(selectedShape) {
+    const selectedProperties = shapes[selectedShape];
+    const hiddenProperties = shapes[hiddenShape];
+
+    let matchCount = 0;
+
+    for (const property in selectedProperties) {
+      if (selectedProperties[property] === hiddenProperties[property]) {
+        matchCount++;
+      }
+    }
+
+    return matchCount;
+  }
+
+  // Function to display feedback to the player
+  function displayFeedback(matchCount) {
+    feedbackElement.innerText = `Matching Properties: ${matchCount} out of ${Object.keys(shapes[hiddenShape]).length}`;
+  }
+
+  // Function to get a random shape
+  function getRandomShape() {
+    const shapeKeys = Object.keys(shapes);
+    return shapeKeys[Math.floor(Math.random() * shapeKeys.length)];
+  }
+
+  // Function to reset the game
+  function resetGame() {
+    attempts = 0;
+    feedbackElement.innerText = '';
+    hiddenShape = getRandomShape();
+    document.getElementById('card').innerText = `Hidden Shape: ${hiddenShape}`;
+  }
+</script>
+
+</body>
+</html>
